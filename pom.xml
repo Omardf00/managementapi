@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.hairdresser</groupId>
 	<artifactId>managers</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>managers</name>
 	<description>Application destinated for the managers to schedule their monthly activity</description>
 	<url/>
