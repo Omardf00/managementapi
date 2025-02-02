@@ -1,8 +1,8 @@
 package com.hairdresser.managers.entities;
 
-import java.math.BigInteger;
-
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "user_detail")
+@Table(name = "user_details")
 @Data
 @Builder
 @NoArgsConstructor
@@ -20,9 +20,12 @@ import lombok.NoArgsConstructor;
 public class UserDetailEntity {
 	
 	@Id
-	private BigInteger id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	
     private String phoneNumber;
+    
+    private String realName;
 
     private String firstLastName;
 
