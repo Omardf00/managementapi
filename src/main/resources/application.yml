@@ -13,4 +13,8 @@ spring:
 
 logging:
   level:
-    root: INFO 
+    root: INFO
+
+app:
+  config:
+    key: "7FF6936DE688EC87D52C522C7E878FCFF0B0599DD7CB30E8C2073422FFB63BD9"
