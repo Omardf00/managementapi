@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.hairdresser.managers.model.auth.AuthRequest;
 import com.hairdresser.managers.model.auth.AuthResponse;
 import com.hairdresser.managers.repository.UserRepository;
+import com.hairdresser.managers.validation.LoginValidation;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +22,7 @@ public class AuthService {
 	private final JWTService jwtService;
 	
 	public AuthResponse login(AuthRequest request) {
+		LoginValidation.validateEntrydata(request);
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUserName(), request.getPassword()));
         var user = userRepository.findByUserName(request.getUserName());
         var jwtToken = jwtService.generateToken(user);
