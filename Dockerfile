@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk
-WORKDIR /app
-COPY target/*.jar app.jar
-ENTRYPOINT ["sh", "-c", "java -jar *.jar"]
+FROM openjdk:21
+COPY . /usr/scr/app
+WORKDIR /usr/scr/app
+CMD [ "java", "-jar", "./target/*.jar" ]
