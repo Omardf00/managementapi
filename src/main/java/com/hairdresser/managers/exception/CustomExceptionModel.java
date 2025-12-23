@@ -28,6 +28,14 @@ public class CustomExceptionModel {
 		}
 	}
 	
+	public static class CustomForbiddenException extends CustomException {
+		private static final long serialVersionUID = -1445726245064797107L;
+
+		public CustomForbiddenException(String code) {
+			super(code, HttpStatus.FORBIDDEN);
+		}
+	}
+	
 	public static class CustomNoContentException extends CustomException {
 		private static final long serialVersionUID = 4953106025602487100L;
 
