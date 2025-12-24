@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hairdresser.managers.model.PostCreateUserRequest;
 import com.hairdresser.managers.model.PostCreateUserResponse;
 import com.hairdresser.managers.service.CreateUserService;
+import com.hairdresser.managers.service.GrantAdminService;
 import com.hairdresser.managers.service.InvalidateUserService;
 
 import jakarta.validation.Valid;
@@ -25,16 +26,24 @@ public class UserController {
 	private final CreateUserService createUserService;
 
 	private final InvalidateUserService invalidateUserService;
+	
+	private final GrantAdminService grantAdminService;
 
 	@PostMapping("/sign_up")
 	public ResponseEntity<PostCreateUserResponse> createUser(@Valid @RequestBody PostCreateUserRequest request,
 			BindingResult result) {
-		return new ResponseEntity<PostCreateUserResponse>(createUserService.createUser(request), HttpStatus.CREATED);
+		return new ResponseEntity<PostCreateUserResponse>(createUserService.createUser(request, result), HttpStatus.CREATED);
 	}
 
 	@PostMapping("/inactivate/{userId}")
 	public ResponseEntity<Void> inactivateUser(@PathVariable String userId) {
 		invalidateUserService.invalidateUser(userId);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PostMapping("/grant_admin/{userId}")
+	public ResponseEntity<Void> grantAdmin(@PathVariable String userId) {
+		grantAdminService.grantAdminService(userId);
 		return ResponseEntity.noContent().build();
 	}
 

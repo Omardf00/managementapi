@@ -10,33 +10,34 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.hairdresser.managers.entities.RoleEntity;
 import com.hairdresser.managers.entities.UserEntity;
 import com.hairdresser.managers.exception.CustomExceptionModel.CustomBadRequestException;
 import com.hairdresser.managers.exception.CustomExceptionModel.CustomForbiddenException;
 import com.hairdresser.managers.exception.CustomExceptionModel.CustomInternalServerErrorException;
 import com.hairdresser.managers.exception.CustomExceptionModel.CustomNotFoundException;
 import com.hairdresser.managers.repository.UserRepository;
-import com.hairdresser.managers.service.InvalidateUserService;
+import com.hairdresser.managers.service.GrantAdminService;
 import com.hairdresser.managers.validation.UserIdValidations;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
-public class InvalidateUserServiceImpl implements InvalidateUserService{
+@RequiredArgsConstructor
+public class GrantAdminServiceImpl implements GrantAdminService {
 	
 	private final UserRepository userRepositoty;
 
 	@Override
-	public void invalidateUser(String userId) {
+	public void grantAdminService(String userId) {
 		UserIdValidations.validateuserId(userId);
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		validateAdmin(auth.getAuthorities().toArray());
 		var user = getUserFromDb(userId);
-		checkActivity(user);
-		inactivateUser(user);
+		checkActivityAndRole(user);
+		grantAdmin(user);
 	}
 	
 	private UserEntity getUserFromDb(String userId) {
@@ -54,10 +55,14 @@ public class InvalidateUserServiceImpl implements InvalidateUserService{
 		return op.get();
 	}
 	
-	private void checkActivity(UserEntity user) {
+	private void checkActivityAndRole(UserEntity user) {
 		if (!user.getIsActive()) {
 			log.error("User is not active");
 			throw new CustomBadRequestException("inactive_user");
+		}
+		if (user.getRole().getRoleId() == 1L) {
+			log.error("User is already an Admin");
+			throw new CustomBadRequestException("Managers-0009");
 		}
 	}
 	
@@ -71,8 +76,9 @@ public class InvalidateUserServiceImpl implements InvalidateUserService{
 		}
 	}
 	
-	private void inactivateUser(UserEntity user) {
-		user.setIsActive(false);
+	private void grantAdmin(UserEntity user) {
+		RoleEntity role = new RoleEntity(1L, "ADMIN");
+		user.setRole(role);
 		try {
 			userRepositoty.save(user);
 		} catch (DataAccessException e) {

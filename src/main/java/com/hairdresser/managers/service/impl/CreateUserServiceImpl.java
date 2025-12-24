@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import com.hairdresser.managers.entities.UserDetailEntity;
 import com.hairdresser.managers.entities.UserEntity;
@@ -37,7 +38,11 @@ public class CreateUserServiceImpl implements CreateUserService {
 
 	@Transactional
 	@Override
-	public PostCreateUserResponse createUser(PostCreateUserRequest request) {
+	public PostCreateUserResponse createUser(PostCreateUserRequest request, BindingResult result) {
+		if (result.hasErrors()) {
+			log.error("Errors in the body");
+			throw new CustomBadRequestException("Managers-0008");
+		}
 		checkUserName(request);
 		insertIntoUsers(request);
 		insertIntoUserDetails(request);
