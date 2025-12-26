@@ -2,6 +2,7 @@ package com.hairdresser.managers.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,12 +36,14 @@ public class UserController {
 		return new ResponseEntity<PostCreateUserResponse>(createUserService.createUser(request, result), HttpStatus.CREATED);
 	}
 
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/inactivate/{userId}")
 	public ResponseEntity<Void> inactivateUser(@PathVariable String userId) {
 		invalidateUserService.invalidateUser(userId);
 		return ResponseEntity.noContent().build();
 	}
 	
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/grant_admin/{userId}")
 	public ResponseEntity<Void> grantAdmin(@PathVariable String userId) {
 		grantAdminService.grantAdminService(userId);
