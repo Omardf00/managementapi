@@ -5,9 +5,12 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.KeyGenerator;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class KeyGeneratorUtil {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws NoSuchAlgorithmException {
 		try {
             // Generate a 256-bit (32-byte) key using SecureRandom
             KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
@@ -20,7 +23,8 @@ public class KeyGeneratorUtil {
             // Print the key bytes (in hexadecimal)
             System.out.println("Generated Key: " + bytesToHex(keyBytes));
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            log.error("NoSuchAlgorithmException");
+            throw e;
         }
 	}
 	

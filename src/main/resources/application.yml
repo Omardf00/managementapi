@@ -10,6 +10,11 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: none
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9090/.well-known/jwks.json
 
 logging:
   level:

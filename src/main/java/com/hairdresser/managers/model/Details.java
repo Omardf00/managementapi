@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class Details {
 
 	private String phoneNumber;
-
+	
 	private String realName;
 
 	private String firstLastName;

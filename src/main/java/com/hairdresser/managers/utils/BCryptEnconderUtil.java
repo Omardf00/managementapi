@@ -8,7 +8,7 @@ public class BCryptEnconderUtil {
 	private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 	public static void main(String[] args) {
-		System.out.println(encodePassword("Prueba123"));
+		System.out.println(encodePassword("Seguridad_6"));
 	}
 
 	public static String encodePassword(String rawPassword) {

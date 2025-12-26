@@ -8,15 +8,16 @@ import com.hairdresser.managers.entities.UserDetailEntity;
 import com.hairdresser.managers.entities.UserEntity;
 import com.hairdresser.managers.model.PostCreateUserRequest;
 import com.hairdresser.managers.model.PostCreateUserResponse;
+import com.hairdresser.managers.utils.Constants;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", imports = {Constants.class})
 public interface PostCreateUserMapper {
 	
 	PostCreateUserMapper INSTANCE = Mappers.getMapper(PostCreateUserMapper.class);
 	
 	@Mapping(target = "userName", source = "userName")
-	@Mapping(target = "role.roleId", source = "role.roleId")
-	@Mapping(target = "role.roleName", source = "role.roleName")
+	@Mapping(target = "role.roleId", expression = "java(Constants.LONG_2)")
+	@Mapping(target = "role.roleName", expression = "java(Constants.USER)")
 	@Mapping(target = "isActive", expression = "java(Boolean.TRUE)")
 	UserEntity userEntityMapper(PostCreateUserRequest request);
 	

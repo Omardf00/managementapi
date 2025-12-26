@@ -1,19 +1,20 @@
 package com.hairdresser.managers.controller;
 
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hairdresser.managers.exception.CustomExceptionModel.CustomBadRequestException;
 import com.hairdresser.managers.model.PostCreateUserRequest;
 import com.hairdresser.managers.model.PostCreateUserResponse;
-import com.hairdresser.managers.service.UserService;
+import com.hairdresser.managers.service.CreateUserService;
+import com.hairdresser.managers.service.GrantAdminService;
+import com.hairdresser.managers.service.InvalidateUserService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,17 +24,30 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 
-	private final UserService userService;
+	private final CreateUserService createUserService;
+
+	private final InvalidateUserService invalidateUserService;
+	
+	private final GrantAdminService grantAdminService;
 
 	@PostMapping("/sign_up")
 	public ResponseEntity<PostCreateUserResponse> createUser(@Valid @RequestBody PostCreateUserRequest request,
 			BindingResult result) {
-		return new ResponseEntity<PostCreateUserResponse>(userService.createUser(request), HttpStatus.CREATED);
+		return new ResponseEntity<PostCreateUserResponse>(createUserService.createUser(request, result), HttpStatus.CREATED);
+	}
+
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@PostMapping("/inactivate/{userId}")
+	public ResponseEntity<Void> inactivateUser(@PathVariable String userId) {
+		invalidateUserService.invalidateUser(userId);
+		return ResponseEntity.noContent().build();
 	}
 	
-	@GetMapping
-	public ResponseEntity<?> test() throws BadRequestException {
-		throw new CustomBadRequestException("test");
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@PostMapping("/grant_admin/{userId}")
+	public ResponseEntity<Void> grantAdmin(@PathVariable String userId) {
+		grantAdminService.grantAdminService(userId);
+		return ResponseEntity.noContent().build();
 	}
 
 }
