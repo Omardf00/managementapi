@@ -1,18 +1,12 @@
 package com.hairdresser.managers.service.impl;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.hairdresser.managers.entities.UserEntity;
 import com.hairdresser.managers.exception.CustomExceptionModel.CustomBadRequestException;
-import com.hairdresser.managers.exception.CustomExceptionModel.CustomForbiddenException;
 import com.hairdresser.managers.exception.CustomExceptionModel.CustomInternalServerErrorException;
 import com.hairdresser.managers.exception.CustomExceptionModel.CustomNotFoundException;
 import com.hairdresser.managers.repository.UserRepository;
@@ -32,8 +26,6 @@ public class InvalidateUserServiceImpl implements InvalidateUserService{
 	@Override
 	public void invalidateUser(String userId) {
 		UserIdValidations.validateuserId(userId);
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		validateAdmin(auth.getAuthorities().toArray());
 		var user = getUserFromDb(userId);
 		checkActivity(user);
 		inactivateUser(user);
@@ -58,16 +50,6 @@ public class InvalidateUserServiceImpl implements InvalidateUserService{
 		if (!user.getIsActive()) {
 			log.error("User is not active");
 			throw new CustomBadRequestException("inactive_user");
-		}
-	}
-	
-	private void validateAdmin(Object[] roles) {
-		List<String> list =  Arrays.stream(roles)
-		        .map(Object::toString)
-		        .collect(Collectors.toList());
-		if (!list.contains("ADMIN")) {
-			log.error("Only an Admin can invalidate an account");
-			throw new CustomForbiddenException("not_admin");
 		}
 	}
 	

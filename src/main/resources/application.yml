@@ -2,7 +2,7 @@ spring.profiles.active: local
 
 spring:
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/management?useSSL=false
+    url: jdbc:mysql://localhost:3306/management?useSSL=false
     username: root
     password: Seguridad_6
     driver-class-name: com.mysql.cj.jdbc.Driver
