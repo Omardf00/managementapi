@@ -1,0 +1,7 @@
+DATABASE_URL: jdbc:mysql://localhost:3306/management?useSSL=false
+DATABASE_USERNAME: root
+DATABASE_DRIVER: com.mysql.cj.jdbc.Driver
+DATABASE_DIALECT: org.hibernate.dialect.MySQLDialect
+DATABASE_DDL: none
+SECURITY_JWK_URL: http://localhost:9090/.well-known/jwks.json
+LOGGING_LEVEL_ROOT: INFO

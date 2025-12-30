@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class InvalidateUserServiceImpl implements InvalidateUserService{
 	
-	private final UserRepository userRepositoty;
+	private final UserRepository userRepository;
 
 	@Override
 	public void invalidateUser(String userId) {
@@ -34,7 +34,7 @@ public class InvalidateUserServiceImpl implements InvalidateUserService{
 	private UserEntity getUserFromDb(String userId) {
 		Optional<UserEntity> op = Optional.empty();
 		try {
-			op = userRepositoty.findById(Long.parseLong(userId));
+			op = userRepository.findById(Long.parseLong(userId));
 			if (op.isEmpty()) {
 				log.error("The user does not exist in the database");
 				throw new CustomNotFoundException("Managers-0004");
@@ -56,7 +56,7 @@ public class InvalidateUserServiceImpl implements InvalidateUserService{
 	private void inactivateUser(UserEntity user) {
 		user.setIsActive(false);
 		try {
-			userRepositoty.save(user);
+			userRepository.save(user);
 		} catch (DataAccessException e) {
 			log.error("There was a problem trying to access the database");
 			throw new CustomInternalServerErrorException("database_error");
