@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class GrantAdminServiceImpl implements GrantAdminService {
 	
-	private final UserRepository userRepositoty;
+	private final UserRepository userRepository;
 
 	@Override
 	public void grantAdminService(String userId) {
@@ -35,7 +35,7 @@ public class GrantAdminServiceImpl implements GrantAdminService {
 	private UserEntity getUserFromDb(String userId) {
 		Optional<UserEntity> op = Optional.empty();
 		try {
-			op = userRepositoty.findById(Long.parseLong(userId));
+			op = userRepository.findById(Long.parseLong(userId));
 			if (op.isEmpty()) {
 				log.error("The user does not exist in the database");
 				throw new CustomNotFoundException("Managers-0004");
@@ -62,7 +62,7 @@ public class GrantAdminServiceImpl implements GrantAdminService {
 		RoleEntity role = new RoleEntity(1L, "ADMIN");
 		user.setRole(role);
 		try {
-			userRepositoty.save(user);
+			userRepository.save(user);
 		} catch (DataAccessException e) {
 			log.error("There was a problem trying to access the database");
 			throw new CustomInternalServerErrorException("database_error");
