@@ -19,3 +19,17 @@ spring:
 logging:
   level:
     root: ${LOGGING_LEVEL_ROOT}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
+      group:
+        readiness:
+          include: db, diskSpace
+        liveness:
+          include: ping
